@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { createUser, deleteUser, getAllUsers, updateUser } from '../../models/users.model';
-import { createUserAuth } from '../../models/auth.model'
+import { createUserAuth, updateUserAuth } from '../../models/auth.model'
 
 //! Método POST - Criando um usuário no banco de dados e authentication do Firebase
 async function httpCreateUser(request: Request, response: Response){
@@ -21,13 +21,15 @@ async function httpGetAllUsers(request: Request, response: Response){
 }
 
 //! Método PUT - Update dos dados do usuário
-    //TODO Posso trocar para PATCH?
 async function httpUpdateUser(request: Request, response: Response){
-    const { name, email, password, knowledges } = request.body;
+    const { id } = request.params;
+    const { currentEmail, currentPassword, name, email, password, knowledges } = request.body;
 
-    await updateUser(name, email, password, knowledges);
-
-    return response.status(200).send();
+    const statusResponse = await updateUserAuth(id, currentEmail, currentPassword, name, email, password, knowledges);
+    
+    //? Retornando status 200 - OK ou 400 - BAD REQUEST
+    if(statusResponse) return response.status(200).send();
+    else return response.status(400).send();
 }
 
 //! Método DELETE - Deletando dados do usuário

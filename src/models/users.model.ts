@@ -34,13 +34,21 @@ async function getAllUsers(){
 async function updateUser(name: string, userID: string, email: string, knowledges: Array<string>){
     const referencePath = `/users/${userID}/`;
     const userReference = ref(database, referencePath);
-
+    const snapshot = await get(userReference);
+    
+    let currentUserData: Object;
+    
+    (snapshot.exists()) ? currentUserData = snapshot.val() : console.log('Usuário não existe'); 
+    
+    let newUserData = {
+        email: (email !== '') ? email : currentUserData['email'],
+        knowledges: (knowledges !== []) ? knowledges : currentUserData['knowledges'],
+        name: (name !== '') ? name : currentUserData['name'],
+        meetings: currentUserData['meetings']
+    }
+    
     //TODO: como será tratado os dados que não serão alterados
-    await update(userReference, {
-        name,
-        email,
-        knowledges,
-    });
+    await update(userReference, newUserData);
 }
 
 async function deleteUser(id: string){

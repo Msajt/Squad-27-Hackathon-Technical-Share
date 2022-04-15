@@ -12,7 +12,7 @@ const usersRouter = express.Router();
 //? Método POST
     usersRouter.post('/', httpCreateUser);
 //? Método PUT
-    usersRouter.put('/', httpUpdateUser);
+    usersRouter.put('/:id', httpUpdateUser);
 //? Método DELETE
     usersRouter.delete('/:id', httpDeleteUser);
 

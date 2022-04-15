@@ -3,8 +3,12 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword,
     signOut,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updateEmail,
+    updatePassword,
 } from 'firebase/auth';
-import { createUser } from './users.model';
+import { createUser, updateUser } from './users.model';
 const auth = getAuth();
 
 //! Criando um novo usuário no 'auth'
@@ -30,6 +34,39 @@ async function createUserAuth(name: string, email: string, password: string, kno
 
         return success;
     //TODO -> enviar para a página de login
+}
+
+//! Update do usuário em 'auth'
+async function updateUserAuth(userId: string, currentEmail: string, currentPassword: string, name: string, newEmail: string, newPassword: string, knowledges: Array<string>): Promise<boolean>{
+    const credential = EmailAuthProvider.credential(currentEmail, currentPassword);
+    const { currentUser } = auth;
+    
+    let success = false;
+
+    await reauthenticateWithCredential(currentUser, credential)
+        .then(async (userCrendential) => {
+            if(newEmail !== ''){
+                //? Preencheu com um novo email
+                    //* Update do email
+                await updateEmail(currentUser, newEmail)
+                    .then(() => console.log('Email atualizado'))
+                    .catch(error => console.log(`Houve um erro ao atualizar o email\n${error.message}`));  
+            }
+            if(newPassword !== ''){
+                //? Preencheu com uma nova senha
+                    //* Update da senha
+                await updatePassword(currentUser, newPassword)
+                    .then(() => console.log('Email atualizado'))
+                    .catch(error => console.log(`Houve um erro ao atualizar a senha\n${error.message}`));        
+            }
+
+            //? Update dos dados no banco
+            await updateUser(name, userId, newEmail, knowledges);
+        })
+        .then(() => success = true)
+        .catch(error => console.log(`Houve um erro na reautenticação\n${error.message}`))
+
+    return success;
 }
 
 //! Fazendo o login do usuário
@@ -84,6 +121,7 @@ async function verifyUserLogin(): Promise<boolean>{
 
 export {
     createUserAuth,
+    updateUserAuth,
     signInUserAuth,
     signOutUserAuth,
     verifyUserLogin
