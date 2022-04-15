@@ -44,7 +44,7 @@ async function updateUser(name: string, userID: string, email: string, knowledge
         email: (email !== '') ? email : currentUserData['email'],
         knowledges: (knowledges !== []) ? knowledges : currentUserData['knowledges'],
         name: (name !== '') ? name : currentUserData['name'],
-        meetings: currentUserData['meetings']
+        meetings: (currentUserData['meetings'] !== undefined) ? currentUserData['meetings'] : null
     }
     
     //TODO: como será tratado os dados que não serão alterados

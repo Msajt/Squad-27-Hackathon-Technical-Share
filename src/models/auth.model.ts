@@ -56,12 +56,14 @@ async function updateUserAuth(userId: string, currentEmail: string, currentPassw
                 //? Preencheu com uma nova senha
                     //* Update da senha
                 await updatePassword(currentUser, newPassword)
-                    .then(() => console.log('Email atualizado'))
+                    .then(() => console.log('Senha atualizada'))
                     .catch(error => console.log(`Houve um erro ao atualizar a senha\n${error.message}`));        
             }
 
             //? Update dos dados no banco
-            await updateUser(name, userId, newEmail, knowledges);
+            await updateUser(name, userId, newEmail, knowledges)
+                .then(() => console.log('Banco de dados atualizado com sucesso'))
+                .catch(error => console.log(`Houve um erro ao atualizar o banco de dados\n${error.message}`));
         })
         .then(() => success = true)
         .catch(error => console.log(`Houve um erro na reautenticação\n${error.message}`))
