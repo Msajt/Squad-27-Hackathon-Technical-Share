@@ -82,46 +82,6 @@
                         }
                     }
                 }
-            },
-            "put":{
-                "tags": ["Users"],
-                "summary": "Atualiza usuário no banco",
-                "description": "Atualiza o usuário substituindo as informações com as passadas no body",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties":{
-                                    "name":{
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    },
-                                    "knowledges": {
-                                        "type": "array"
-                                    }
-                                    
-                                },
-                                "example": {
-                                    "name": "Fulano da Silva",
-                                    "email": "fulanodasilva@email.com",
-                                    "password": "senha123",
-                                    "knowledges": ["UI", "UX", "Dev", "Backend"]
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "200": {
-                        "description": "Usuário atualizado"
-                    }
-                }
             }
         },
         "/users/{id}":{
@@ -139,6 +99,64 @@
                 "responses":{
                     "200": {
                         "description": "Success"
+                    }
+                }
+            },
+            "put": {
+                "parameters":[{
+                    "in": "path",
+                    "name": "id",
+                    "required": "true",
+                    "type": "string",
+                    "description": "Id do usuário no banco e auth"
+                }],
+                "tags": ["Users"],
+                "summary": "Atualizar usuário",
+                "description": "Atualiza o usuário substituindo as informações com as passadas no body",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties":{
+                                    "currentEmail": {
+                                        "type": "string"
+                                    },
+                                    "currentPassword": {
+                                        "type": "string"
+                                    },
+                                    "name":{
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "knowledges": {
+                                        "type": "array"
+                                    }
+                                    
+                                },
+                                "example": {
+                                    "currentEmail": "fulano@email.com",
+                                    "currentPassword": "senha12345",
+                                    "name": "Fulano da Silva",
+                                    "email": "fulanodasilva@email.com",
+                                    "password": "senha123",
+                                    "knowledges": ["UI", "UX", "Dev", "Backend"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     }
                 }
             }
